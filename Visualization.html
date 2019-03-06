@@ -19,11 +19,13 @@
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('MinigrateChart'));
     var data = [
-        {name: '216', value: 100}
+        {name: '216', value: 50},
+        {name: '217', value: 50}
     ];
 
     var geoCoordMap = {
-        '216':[120.2393,33.38522]
+        '216':[120.2393,33.38522],
+        '217':[120.2391,33.39356]
 
     };
 
@@ -239,7 +241,7 @@
                 },
                 itemStyle: {
                     normal: {
-                        color: '#f4e925',
+                        color: '#f4141f',
                         shadowBlur: 10,
                         shadowColor: '#333'
                     }
