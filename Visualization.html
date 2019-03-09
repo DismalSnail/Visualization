@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>百度地图</title>
+    <title>盐城共享单车网络</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"><meta name="format-detection" content="telephone=no" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -59,11 +59,12 @@
                 }
             },
             tooltip : {
-                trigger: 'item'
+                trigger: 'item',
+                formatter:'站点号:{b},坐标:{c}'
             },
             bmap: {
-                center: [120.13,33.38],
-                zoom: 11,
+                center: [120.20,33.38],
+                zoom: 14,
                 roam: true,
                 mapStyle: {
                     styleJson: [
@@ -200,7 +201,7 @@
             },
             series : [
                 {
-                    name: 'pm2.5',
+                    name: 'stationID',
                     type: 'scatter',
                     coordinateSystem: 'bmap',
                     data: convertData(data),
@@ -222,37 +223,6 @@
                             color: '#ddb926'
                         }
                     }
-                },
-                {
-                    name: 'Top 5',
-                    type: 'effectScatter',
-                    coordinateSystem: 'bmap',
-                    data: convertData(data.sort(function (a, b) {
-                        return b.value - a.value;
-                    }).slice(0, 6)),
-                    symbolSize: function (val) {
-                        return val[2] / 10;
-                    },
-                    showEffectOn: 'emphasis',
-                    rippleEffect: {
-                        brushType: 'stroke'
-                    },
-                    hoverAnimation: true,
-                    label: {
-                        normal: {
-                            formatter: '{b}',
-                            position: 'right',
-                            show: true
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#f4141f',
-                            shadowBlur: 10,
-                            shadowColor: '#333'
-                        }
-                    },
-                    zlevel: 1
                 },
             ]
         };
