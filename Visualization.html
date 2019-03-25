@@ -14,16 +14,16 @@
     <script type="text/javascript" src="js/bmap.min.js"></script>
 </head>
 <body>
-<div id="MinigrateChart" style="width: 1920px;height:800px;"></div>
+<div id="main" style="width: 1920px;height:800px;"></div>
 
 
 <script type="text/javascript">
-    var myChart = echarts.init(document.getElementById('MinigrateChart'));
+    var myChart = echarts.init(document.getElementById('main'));
     var data = [];
     var geoCoordMap= {};
     var convertData;
+
     d3.csv("CSV/locationList.csv",function (error,csvdata) {
-        console.log(csvdata);
         for (let i = 0; i <csvdata.length ; i++) {
             let meg={};
             let location=[];

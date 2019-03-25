@@ -1,0 +1,29 @@
+{
+  "location":[
+    {
+      "stationID": 1,
+      "longitude": 120.168799,
+      "latitude": 33.354391
+    },
+    {
+      "stationID": 76,
+      "longitude": 120.162989,
+      "latitude": 33.353818
+    },
+    {
+      "stationID": 9,
+      "longitude": 120.161685,
+      "latitude": 33.353931
+    },
+    {
+      "stationID": 43,
+      "longitude": 120.161724,
+      "latitude": 33.362943
+    }
+  ],
+  "line":[
+{"SHEDID":"1","RTSHEDID":"1"},
+{"SHEDID":"1","RTSHEDID":"76"},
+{"SHEDID":"1","RTSHEDID":"9"},
+{"SHEDID":"1","RTSHEDID":"43"}]
+  }
