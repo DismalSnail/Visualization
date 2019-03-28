@@ -28,6 +28,10 @@
 
     $.getJSON(uploadedDataURL, function(data) {
 
+        $.get('JSON/yanc.json',function (geoJson) {
+
+            echarts.registerMap("yanc",geoJson);
+
         myChart.hideLoading();
 
         function getAirportCoord(idx) {
@@ -47,7 +51,7 @@
 
         myChart.setOption({
             geo3D: {
-                map: 'china',
+                map: 'yanc',
                 shading: 'realistic',
                 roam:false,
                 silent: true,
@@ -114,6 +118,7 @@
                 type: 'lines3DToggleEffect',
                 seriesIndex: 0
             });
+        });
         });
     });
     if (option && typeof option === "object") {

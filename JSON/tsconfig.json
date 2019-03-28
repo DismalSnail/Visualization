@@ -7,18 +7,18 @@
     },
     {
       "stationID": 76,
-      "longitude": 120.162989,
-      "latitude": 33.353818
+      "longitude": 120.562989,
+      "latitude": 34.153818
     },
     {
       "stationID": 9,
-      "longitude": 120.161685,
-      "latitude": 33.353931
+      "longitude": 120.361685,
+      "latitude": 32.393931
     },
     {
       "stationID": 43,
-      "longitude": 120.161724,
-      "latitude": 33.362943
+      "longitude": 120.961724,
+      "latitude": 33.262943
     }
   ],
   "line":[
