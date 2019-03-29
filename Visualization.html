@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <title>盐城共享单车网络</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes"><meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script src="http://api.map.baidu.com/api?v=3.0&ak=DekeYzYeAYX1nA8fYzw1lt6uqTVXe8Bt&s=1"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -20,12 +21,23 @@
 
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('main'));
-    var geoCoordMap= {};
-    var convertData;
+    var geoCoordMap = {};
+    var converData = function (data) {
+        var res = [];
+        for (let i = 0; i < data.length; i++) {
+            res.push(
+                {
+                    name: data[i].stationID,
+                    value: [data[i].longitude, data[i].latitude]
+                }
+            )
+        }
+        return res;
+    };
 
     // myChart.showLoading();
-    $.getJSON('JSON/csvjson.json',function (data) {
-       // console.log(data);
+    $.getJSON('JSON/csvjson.json', function (data) {
+
         option = {
             // backgroundColor: '#404a59',
             title: {
@@ -35,11 +47,11 @@
                     color: '#c67752'
                 }
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'item',
             },
             bmap: {
-                center: [120.20,33.38],
+                center: [120.20, 33.38],
                 zoom: 14,
                 roam: true,
                 mapStyle: {
@@ -166,39 +178,64 @@
                     ]
                 }
             },
-            series : [
+            series: [
                 {
-                    name: 'station-points',
+                    name: 'station',
                     type: 'scatter',
+                    coordinateSystem: 'bmap',
+                    data: converData(data.location),
+                    tooltip:{
+                        show:true,
+                        trigger:'item',
+                        formatter:function (params) {
+                            return 'stationID:'+ params.name + '<br/>' + 'longitude:'+ params.value[0]+'<br/>'+'latitude:'+params.value[1];
+                        }
+                    },
+                    symbolSize: 5,
+                    label:{
+                        normal:{
+                            formatter:'{b}',
+                            position:'right',
+                            show:false
+                        },
+                        emphasis: {
+                            show:true
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: 'yellow'
+                        }
+                    }
                 }
-                // {
-                //     name: 'station-lines',
-                //     type: 'lines',
-                //     coordinateSystem: 'bmap',
-                //     data:[
-                //         {
-                //             coords:[[120.168799,33.354391],[120.161685,33.353931]]
-                //         },
-                //         {
-                //             coords:[[120.168799,33.354391],[120.162989,33.353818]]
-                //         }
-                //     ],
-                //     silent: true,
-                //     lineStyle: {
-                //         normal: {
-                //             color: '#26ff0a',
-                //             opacity: 0.5,
-                //             width: 1
-                //         }
-                //     },
-                //     progressiveThreshold: 500,
-                //     progressive: 200,
-                //     itemStyle: {
-                //         normal: {
-                //             color: '#ddb926'
-                //         }
-                //     }
-                // }
+  /*              {
+                    name: 'station-lines',
+                    type: 'lines',
+                    coordinateSystem: 'bmap',
+                    data: [
+                        {
+                            coords: [[120.168799, 33.354391], [120.161685, 33.353931]]
+                        },
+                        {
+                            coords: [[120.168799, 33.354391], [120.162989, 33.353818]]
+                        }
+                    ],
+                    silent: true,
+                    lineStyle: {
+                        normal: {
+                            color: '#26ff0a',
+                            opacity: 0.5,
+                            width: 1
+                        }
+                    },
+                    progressiveThreshold: 500,
+                    progressive: 200,
+                    itemStyle: {
+                        normal: {
+                            color: '#ddb926'
+                        }
+                    }
+                }*/
             ]
         };
 
