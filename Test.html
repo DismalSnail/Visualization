@@ -6,6 +6,7 @@
 <body style="height: 100%; margin: 0">
 <div id="container" style="height: 100%"></div>
 <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="js/bmap.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
@@ -53,9 +54,10 @@
             geo3D: {
                 map: 'yanc',
                 shading: 'realistic',
+                color:'blue',
                 roam:false,
                 silent: true,
-                environment: '#333',
+                environment: '#14131b',
                 realisticMaterial: {
                     roughness: 0.8,
                     metalness: 0
@@ -91,15 +93,14 @@
             },
             series: [{
                 type: 'lines3D',
-
                 coordinateSystem: 'geo3D',
 
                 effect: {
                     show: true,
-                    trailWidth: 1,
+                    trailWidth: 2,
                     trailOpacity: 0.5,
                     trailLength: 0.2,
-                    constantSpeed: 5
+                    constantSpeed: 4
                 },
 
                 blendMode: 'lighter',
