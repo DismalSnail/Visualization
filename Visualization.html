@@ -20,10 +20,12 @@
 
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('main'));
-    var data = [];
     var geoCoordMap= {};
     var convertData;
 
+    // myChart.showLoading();
+    $.getJSON('JSON/csvjson.json',function (data) {
+       // console.log(data);
         option = {
             // backgroundColor: '#404a59',
             title: {
@@ -166,42 +168,42 @@
             },
             series : [
                 {
-                    name:'station-points',
-                    type:'scatter',
+                    name: 'station-points',
+                    type: 'scatter',
                 }
-                ,
-                {
-                    name: 'station-lines',
-                    type: 'lines',
-                    coordinateSystem: 'bmap',
-                    data:[
-                        {
-                            coords:[[120.168799,33.354391],[120.161685,33.353931]]
-                        },
-                        {
-                            coords:[[120.168799,33.354391],[120.162989,33.353818]]
-                        }
-                    ],
-                    silent: true,
-                    lineStyle: {
-                        normal: {
-                            color: '#26ff0a',
-                            opacity: 0.5,
-                            width: 1
-                        }
-                    },
-                    progressiveThreshold: 500,
-                    progressive: 200,
-                    itemStyle: {
-                        normal: {
-                            color: '#ddb926'
-                        }
-                    }
-                },
+                // {
+                //     name: 'station-lines',
+                //     type: 'lines',
+                //     coordinateSystem: 'bmap',
+                //     data:[
+                //         {
+                //             coords:[[120.168799,33.354391],[120.161685,33.353931]]
+                //         },
+                //         {
+                //             coords:[[120.168799,33.354391],[120.162989,33.353818]]
+                //         }
+                //     ],
+                //     silent: true,
+                //     lineStyle: {
+                //         normal: {
+                //             color: '#26ff0a',
+                //             opacity: 0.5,
+                //             width: 1
+                //         }
+                //     },
+                //     progressiveThreshold: 500,
+                //     progressive: 200,
+                //     itemStyle: {
+                //         normal: {
+                //             color: '#ddb926'
+                //         }
+                //     }
+                // }
             ]
         };
 
         myChart.setOption(option);
+    });
 </script>
 </body>
 </html>
