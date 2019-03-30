@@ -11,7 +11,8 @@
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xfhhaTThl11qYVrqLZii6w8qE5ggnhrY&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=DekeYzYeAYX1nA8fYzw1lt6uqTVXe8Bt&s=1"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
        <script type="text/javascript">
@@ -19,7 +20,7 @@ var dom = document.getElementById("container");
 var myChart = echarts.init(dom);
 var app = {};
 option = null;
-var uploadedDataURL = "data-gl/asset/data/flights.json";
+var uploadedDataURL = "JSON/data-1469162638978-rJDcVXku.json";
 
 app.title = '65k+ 飞机航线';
 
@@ -39,66 +40,48 @@ $.getJSON(uploadedDataURL, function(data) {
         ];
     });
 
-    myChart.setOption({
-        geo3D: {
+    myChart.setOption(option = {
+        title: {
+            text: 'World Flights',
+            left: 'center',
+            textStyle: {
+                color: '#eee'
+            }
+        },
+        backgroundColor: '#003',
+        tooltip: {
+            formatter: function (param) {
+                var route = data.routes[param.dataIndex];
+                return data.airports[route[1]][1] + ' > ' + data.airports[route[2]][1];
+            }
+        },
+        geo: {
             map: 'world',
-            shading: 'realistic',
+            left: 0,
+            right: 0,
             silent: true,
-            environment: '#333',
-            realisticMaterial: {
-                roughness: 0.8,
-                metalness: 0
-            },
-            postEffect: {
-                enable: true
-            },
-            groundPlane: {
-                show: false
-            },
-            light: {
-                main: {
-                    intensity: 1,
-                    alpha: 30
-                },
-                ambient: {
-                    intensity: 0
-                }
-            },
-            viewControl: {
-                distance: 70,
-                alpha: 89,
-
-                panMouseButton: 'left',
-                rotateMouseButton: 'right'
-            },
-
             itemStyle: {
-                areaColor: '#000'
-            },
-
-            regionHeight: 0.5
+                normal: {
+                    borderColor: '#003',
+                    color: '#005'
+                }
+            }
         },
         series: [{
-            type: 'lines3D',
-
-            coordinateSystem: 'geo3D',
-
-            effect: {
-                show: true,
-                trailWidth: 1,
-                trailOpacity: 0.5,
-                trailLength: 0.2,
-                constantSpeed: 5
-            },
-
-            blendMode: 'lighter',
-
+            type: 'lines',
+            coordinateSystem: 'geo',
+            data: routes,
+            large: true,
+            largeThreshold: 100,
             lineStyle: {
-                width: 0.2,
-                opacity: 0.05
+                normal: {
+                    opacity: 0.05,
+                    width: 0.5,
+                    curveness: 0.3
+                }
             },
-
-            data: routes
+            // 设置混合模式为叠加
+            blendMode: 'lighter'
         }]
     });
 
@@ -108,7 +91,8 @@ $.getJSON(uploadedDataURL, function(data) {
             seriesIndex: 0
         });
     });
-});;
+});
+
 if (option && typeof option === "object") {
     myChart.setOption(option, true);
 }
