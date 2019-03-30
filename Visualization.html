@@ -10,9 +10,9 @@
     <meta name="format-detection" content="telephone=no"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script src="http://api.map.baidu.com/api?v=3.0&ak=DekeYzYeAYX1nA8fYzw1lt6uqTVXe8Bt&s=1"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/echarts-gl.js"></script>
     <script type="text/javascript" src="js/bmap.min.js"></script>
 </head>
 <body>
@@ -181,7 +181,7 @@
             series: [
                 {
                     name: 'station',
-                    type: 'scatter',
+                    type: 'effectScatter',
                     coordinateSystem: 'bmap',
                     data: converData(data.location),
                     tooltip:{
@@ -191,7 +191,12 @@
                             return 'stationID:'+ params.name + '<br/>' + 'longitude:'+ params.value[0]+'<br/>'+'latitude:'+params.value[1];
                         }
                     },
-                    symbolSize: 5,
+                    symbolSize: 3,
+                    showEffectOn:'render',
+                    rippleEffect:{
+                      brushType: 'stroke'
+                    },
+                    hoverAnimation:true,
                     label:{
                         normal:{
                             formatter:'{b}',
@@ -204,11 +209,13 @@
                     },
                     itemStyle: {
                         normal: {
-                            color: 'yellow'
+                            color: 'yellow',
+                            shadowBlur:1,
+                            shadowColor:'#333'
                         }
                     }
-                }
-  /*              {
+                },
+                {
                     name: 'station-lines',
                     type: 'lines',
                     coordinateSystem: 'bmap',
@@ -220,22 +227,10 @@
                             coords: [[120.168799, 33.354391], [120.162989, 33.353818]]
                         }
                     ],
-                    silent: true,
-                    lineStyle: {
-                        normal: {
-                            color: '#26ff0a',
-                            opacity: 0.5,
-                            width: 1
-                        }
-                    },
-                    progressiveThreshold: 500,
-                    progressive: 200,
-                    itemStyle: {
-                        normal: {
-                            color: '#ddb926'
-                        }
+                    lineStyle:{
+                        curveness:0.25
                     }
-                }*/
+                }
             ]
         };
 
