@@ -21,35 +21,43 @@
 
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('main'));
-    var geoCoordMap = {};
-/*    var converData = function (data) {
+    var converData = function (data) {
         var res = [];
         for (let i = 0; i < data.length; i++) {
-            res.push(
-                {
-                    name: data[i].stationID,
-                    value: [data[i].longitude, data[i].latitude]
-                }
-            )
+            if(data[i][0]===-1) continue;
+            else{
+                res.push(
+                    {
+                        name: ""+data[i][0],
+                        value: [data[i][1], data[i][2]]
+                    }
+                )
+            }
         }
         return res;
-    };*/
-
+    };
+option=null;
 
 
     myChart.showLoading();
-    $.getJSON('JSON/tsconfig.json', function (data) {
+    $.getJSON('JSON/data.json', function (data) {
         myChart.hideLoading();
 
         function getStationCoord(idx) {
             return [data.station[idx][1],data.station[idx][2]];
         }
-        var routes=data.routes.map(function (line) {
-               return [
-                   getStationCoord(line[0]),
-                   getStationCoord(line[1])
-               ];
+        var routes=data.routes.reduce(function (result,line) {
+                let start=getStationCoord(line[0]);
+                let end=getStationCoord(line[1]);
+                if(start[0]===-1 || end[0]===-1) {
+                }
+                else {
+                    result.push([start,end]);
+                }
+                return result;
         });
+        routes.shift();
+        routes.shift();
         option = {
             // backgroundColor: '#404a59',
             title: {
@@ -191,11 +199,11 @@
                 }
             },
             series: [
- /*               {
+                {
                     name: 'station',
                     type: 'effectScatter',
                     coordinateSystem: 'bmap',
-                    data: converData(data.location),
+                    data: converData(data.station),
                     tooltip: {
                         show: true,
                         trigger: 'item',
@@ -226,7 +234,7 @@
                             shadowColor: '#333'
                         }
                     }
-                },*/
+                },
                 {
                     name: 'station-lines',
                     type: 'lines',
@@ -235,14 +243,19 @@
                     coordinateSystem: 'bmap',
                     data: routes,
                     lineStyle: {
-                        curveness: 0.25
-                    }
+                        normal:{
+                            opacity:0.05,
+                            width:0.3,
+                            curveness:0.3
+                        }
+                    },
+                    blendMode:'lighter'
                 }
             ]
         };
-
         myChart.setOption(option);
     });
+
 </script>
 </body>
 </html>
