@@ -40,24 +40,28 @@ option=null;
 
 
     myChart.showLoading();
-    $.getJSON('JSON/data.json', function (data) {
+    $.getJSON('JSON/dataLast.json', function (data) {
         myChart.hideLoading();
-
         function getStationCoord(idx) {
             return [data.station[idx][1],data.station[idx][2]];
         }
-        var routes=data.routes.reduce(function (result,line) {
-                let start=getStationCoord(line[0]);
-                let end=getStationCoord(line[1]);
-                if(start[0]===-1 || end[0]===-1) {
-                }
-                else {
-                    result.push([start,end]);
-                }
-                return result;
+        // var routes=data.routes.reduce(function (result,line) {
+        //         let start=getStationCoord(line[0]);
+        //         let end=getStationCoord(line[1]);
+        //         if(start[0]===-1 || end[0]===-1) {
+        //         }
+        //         else {
+        //             result.push([start,end]);
+        //         }
+        //         return result;
+        // });
+        var routes = data.routes.map(function (airline) {
+            return [
+                getStationCoord(airline[0]),
+                getStationCoord(airline[1])
+            ];
         });
-        routes.shift();
-        routes.shift();
+
         option = {
             // backgroundColor: '#404a59',
             title: {
