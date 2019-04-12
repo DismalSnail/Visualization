@@ -225,7 +225,7 @@ option=null;
                 lineStyle: {
                     normal:{
                         opacity:0.3,
-                        width:0.8,
+                        width:1,
                         curveness:0.3
                     }
                 },
@@ -235,7 +235,7 @@ option=null;
     };
 
     myChart.showLoading();
-    $.getJSON('JSON/weightRoutes.json', function (data) {
+    $.getJSON('JSON/dataSHH.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1],data.station[idx][2]];
