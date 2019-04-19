@@ -24,11 +24,11 @@
     var converData = function (data) {
         var res = [];
         for (let i = 0; i < data.length; i++) {
-            if(data[i][0]===-1) continue;
-            else{
+            if (data[i][0] === -1) continue;
+            else {
                 res.push(
                     {
-                        name: ""+data[i][0],
+                        name: "" + data[i][0],
                         value: [data[i][1], data[i][2]]
                     }
                 )
@@ -36,7 +36,7 @@
         }
         return res;
     };
-option=null;
+    option = null;
 
     option = {
         //backgroundColor: '#003',
@@ -221,45 +221,45 @@ option=null;
                 large: true,
                 largeThreshold: 2000,
                 coordinateSystem: 'bmap',
-                data:[] ,//routes,
+                data: [],//routes,
                 lineStyle: {
-                    normal:{
-                        opacity:0.5,
-                        width:0.3,
-                        curveness:0.3
+                    normal: {
+                        opacity: 0.5,
+                        width: 1,
+                        curveness: 0.3
                     }
                 },
-                blendMode:'lighter',
+                blendMode: 'lighter',
             }
         ]
     };
 
     myChart.showLoading();
-    $.getJSON('Json/FilterTrainData.json', function (data) {
+    $.getJSON('Json/TrainWeightData.json', function (data) {
 
         function getStationCoord(idx) {
-            return [data.station[idx][1],data.station[idx][2]];
+            return [data.station[idx][1], data.station[idx][2]];
         }
 
-            var routes = data.routes.map(function (airline) {
-                return [
-                    getStationCoord(airline[0]),
-                    getStationCoord(airline[1])
-                ];
-            });
-            myChart.hideLoading();
-            myChart.setOption({
-                series:[
-                    {
-                        name:'station',
-                        data:converData(data.station)
-                    },
-                    {
-                        name:'station-lines',
-                        data:routes
-                    }
-                ]
-            });
+        var routes = data.routes.map(function (airline) {
+            return [
+                getStationCoord(airline[0]),
+                getStationCoord(airline[1])
+            ];
+        });
+        myChart.hideLoading();
+        myChart.setOption({
+            series: [
+                {
+                    name: 'station',
+                    data: converData(data.station)
+                },
+                {
+                    name: 'station-lines',
+                    data: routes
+                }
+            ]
+        });
     });
 
     if (option && typeof option === "object") {
