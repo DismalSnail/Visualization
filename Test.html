@@ -225,17 +225,17 @@
                 lineStyle: {
                     normal: {
                         opacity: 0.5,
-                        width: 1,
+                        width: 0.8,
                         curveness: 0.3
                     }
-                },
-                blendMode: 'lighter',
+                }
+                //blendMode: 'lighter',
             }
         ]
     };
 
     myChart.showLoading();
-    $.getJSON('Json/TrainWeightData.json', function (data) {
+    $.getJSON('Json/TrainSHHData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
@@ -256,7 +256,21 @@
                 },
                 {
                     name: 'station-lines',
-                    data: routes
+                    data: routes,
+                    tooltip: {
+                        formatter: function (param) {
+                            var route = data.routes[param.dataIndex];
+                            return route[0] + ' -> ' + route[1] ;
+                        }
+                    },
+                    effect: {
+                        show: true,
+                        period: 4,
+                        trailLength: 0.2,
+                        color: "aaa",
+                        symbolSize: 2,
+                        loop: true
+                    }
                 }
             ]
         });

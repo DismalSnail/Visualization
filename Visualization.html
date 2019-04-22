@@ -21,223 +21,265 @@
 
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('main'));
-    var geoCoordMap = {};
     var converData = function (data) {
         var res = [];
         for (let i = 0; i < data.length; i++) {
-            res.push(
-                {
-                    name: data[i].stationID,
-                    value: [data[i].longitude, data[i].latitude]
-                }
-            )
+            if (data[i][0] === -1) continue;
+            else {
+                res.push(
+                    {
+                        name: "" + data[i][0],
+                        value: [data[i][1], data[i][2]]
+                    }
+                )
+            }
         }
         return res;
     };
+    option = null;
 
-    // myChart.showLoading();
-    $.getJSON('JSON/data.json', function (data) {
-
-        option = {
-            // backgroundColor: '#404a59',
-            title: {
-                text: '盐城共享单车网络',
-                left: 'center',
-                textStyle: {
-                    color: '#c67752'
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-            },
-            bmap: {
-                center: [120.20, 33.38],
-                zoom: 14,
-                roam: true,
-                mapStyle: {
-                    styleJson: [
-                        {
-                            'featureType': 'water',
-                            'elementType': 'all',
-                            'stylers': {
-                                'color': '#031628'
-                            }
-                        },
-                        {
-                            'featureType': 'land',
-                            'elementType': 'geometry',
-                            'stylers': {
-                                'color': '#000102'
-                            }
-                        },
-                        {
-                            'featureType': 'highway',
-                            'elementType': 'all',
-                            'stylers': {
-                                'visibility': 'off'
-                            }
-                        },
-                        {
-                            'featureType': 'arterial',
-                            'elementType': 'geometry.fill',
-                            'stylers': {
-                                'color': '#000000'
-                            }
-                        },
-                        {
-                            'featureType': 'arterial',
-                            'elementType': 'geometry.stroke',
-                            'stylers': {
-                                'color': '#0b3d51'
-                            }
-                        },
-                        {
-                            'featureType': 'local',
-                            'elementType': 'geometry',
-                            'stylers': {
-                                'color': '#000000'
-                            }
-                        },
-                        {
-                            'featureType': 'railway',
-                            'elementType': 'geometry.fill',
-                            'stylers': {
-                                'color': '#000000'
-                            }
-                        },
-                        {
-                            'featureType': 'railway',
-                            'elementType': 'geometry.stroke',
-                            'stylers': {
-                                'color': '#08304b'
-                            }
-                        },
-                        {
-                            'featureType': 'subway',
-                            'elementType': 'geometry',
-                            'stylers': {
-                                'lightness': -70
-                            }
-                        },
-                        {
-                            'featureType': 'building',
-                            'elementType': 'geometry.fill',
-                            'stylers': {
-                                'color': '#000000'
-                            }
-                        },
-                        {
-                            'featureType': 'all',
-                            'elementType': 'labels.text.fill',
-                            'stylers': {
-                                'color': '#857f7f'
-                            }
-                        },
-                        {
-                            'featureType': 'all',
-                            'elementType': 'labels.text.stroke',
-                            'stylers': {
-                                'color': '#000000'
-                            }
-                        },
-                        {
-                            'featureType': 'building',
-                            'elementType': 'geometry',
-                            'stylers': {
-                                'color': '#022338'
-                            }
-                        },
-                        {
-                            'featureType': 'green',
-                            'elementType': 'geometry',
-                            'stylers': {
-                                'color': '#062032'
-                            }
-                        },
-                        {
-                            'featureType': 'boundary',
-                            'elementType': 'all',
-                            'stylers': {
-                                'color': '#465b6c'
-                            }
-                        },
-                        {
-                            'featureType': 'manmade',
-                            'elementType': 'all',
-                            'stylers': {
-                                'color': '#022338'
-                            }
-                        },
-                        {
-                            'featureType': 'label',
-                            'elementType': 'all',
-                            'stylers': {
-                                'visibility': 'off'
-                            }
+    option = {
+        //backgroundColor: '#003',
+        title: {
+            text: '盐城共享单车网络',
+            left: 'center',
+            textStyle: {
+                color: '#c67752'
+            }
+        },
+        tooltip: {
+            trigger: 'item',
+        },
+        bmap: {
+            center: [120.20, 33.38],
+            zoom: 14,
+            roam: true,
+            mapStyle: {
+                styleJson: [
+                    {
+                        'featureType': 'water',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#031628'
                         }
-                    ]
+                    },
+                    {
+                        'featureType': 'land',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'color': '#000102'
+                        }
+                    },
+                    {
+                        'featureType': 'highway',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    },
+                    {
+                        'featureType': 'arterial',
+                        'elementType': 'geometry.fill',
+                        'stylers': {
+                            'color': '#000000'
+                        }
+                    },
+                    {
+                        'featureType': 'arterial',
+                        'elementType': 'geometry.stroke',
+                        'stylers': {
+                            'color': '#0b3d51'
+                        }
+                    },
+                    {
+                        'featureType': 'local',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'color': '#000000'
+                        }
+                    },
+                    {
+                        'featureType': 'railway',
+                        'elementType': 'geometry.fill',
+                        'stylers': {
+                            'color': '#000000'
+                        }
+                    },
+                    {
+                        'featureType': 'railway',
+                        'elementType': 'geometry.stroke',
+                        'stylers': {
+                            'color': '#08304b'
+                        }
+                    },
+                    {
+                        'featureType': 'subway',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'lightness': -70
+                        }
+                    },
+                    {
+                        'featureType': 'building',
+                        'elementType': 'geometry.fill',
+                        'stylers': {
+                            'color': '#000000'
+                        }
+                    },
+                    {
+                        'featureType': 'all',
+                        'elementType': 'labels.text.fill',
+                        'stylers': {
+                            'color': '#857f7f'
+                        }
+                    },
+                    {
+                        'featureType': 'all',
+                        'elementType': 'labels.text.stroke',
+                        'stylers': {
+                            'color': '#000000'
+                        }
+                    },
+                    {
+                        'featureType': 'building',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'color': '#022338'
+                        }
+                    },
+                    {
+                        'featureType': 'green',
+                        'elementType': 'geometry',
+                        'stylers': {
+                            'color': '#062032'
+                        }
+                    },
+                    {
+                        'featureType': 'boundary',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#465b6c'
+                        }
+                    },
+                    {
+                        'featureType': 'manmade',
+                        'elementType': 'all',
+                        'stylers': {
+                            'color': '#022338'
+                        }
+                    },
+                    {
+                        'featureType': 'label',
+                        'elementType': 'all',
+                        'stylers': {
+                            'visibility': 'off'
+                        }
+                    }
+                ]
+            }
+        },
+        series: [
+            {
+                name: 'station',
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: [], //converData(data.station),
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
+                    }
+                },
+                symbolSize: 3,
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'yellow',
+                        shadowBlur: 1,
+                        shadowColor: '#333'
+                    }
                 }
             },
+            {
+                name: 'station-lines',
+                type: 'lines',
+                large: true,
+                largeThreshold: 2000,
+                coordinateSystem: 'bmap',
+                data: [],//routes,
+                lineStyle: {
+                    normal: {
+                        opacity: 0.5,
+                        width: 0.8,
+                        curveness: 0.3
+                    }
+                }
+                //blendMode: 'lighter',
+            }
+        ]
+    };
+
+    myChart.showLoading();
+    $.getJSON('Json/TrainSHHData.json', function (data) {
+
+        function getStationCoord(idx) {
+            return [data.station[idx][1], data.station[idx][2]];
+        }
+
+        var routes = data.routes.map(function (airline) {
+            return [
+                getStationCoord(airline[0]),
+                getStationCoord(airline[1])
+            ];
+        });
+        myChart.hideLoading();
+        myChart.setOption({
             series: [
                 {
                     name: 'station',
-                    type: 'effectScatter',
-                    coordinateSystem: 'bmap',
-                    data: converData(data.location),
-                    tooltip:{
-                        show:true,
-                        trigger:'item',
-                        formatter:function (params) {
-                            return 'stationID:'+ params.name + '<br/>' + 'longitude:'+ params.value[0]+'<br/>'+'latitude:'+params.value[1];
-                        }
-                    },
-                    symbolSize: 3,
-                    showEffectOn:'render',
-                    rippleEffect:{
-                      brushType: 'stroke'
-                    },
-                    hoverAnimation:true,
-                    label:{
-                        normal:{
-                            formatter:'{b}',
-                            position:'right',
-                            show:false
-                        },
-                        emphasis: {
-                            show:true
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: 'yellow',
-                            shadowBlur:1,
-                            shadowColor:'#333'
-                        }
-                    }
+                    data: converData(data.station)
                 },
                 {
                     name: 'station-lines',
-                    type: 'lines',
-                    large:true,
-                    largeThreshold:100,
-                    coordinateSystem: 'bmap',
-                    data: [
-                        {
-                            coords: [[120.168799, 33.354391], [120.161685, 33.353931]]
-                        },
-                        {
-                            coords: [[120.168799, 33.354391], [120.162989, 33.353818]]
+                    data: routes,
+                    tooltip: {
+                        formatter: function (param) {
+                            var route = data.routes[param.dataIndex];
+                            return route[0] + ' -> ' + route[1] ;
                         }
-                    ],
-                    lineStyle:{
-                        curveness:0.25
+                    },
+                    effect: {
+                        show: true,
+                        period: 4,
+                        trailLength: 0.2,
+                        color: "aaa",
+                        symbolSize: 2,
+                        loop: true
                     }
                 }
             ]
-        };
-
-        myChart.setOption(option);
+        });
     });
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
 </script>
 </body>
 </html>
