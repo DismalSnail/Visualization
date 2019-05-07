@@ -36,6 +36,18 @@
         }
         return res;
     };
+    var getCoord=function(staCoord,staNum){
+       var res=[];
+        for (let i = 0;i < staNum.length;i++){
+            res.push(
+                {
+                    name:"" + staNum[i],
+                    value:[staCoord[staNum[i]][1],staCoord[staNum[i]][2]]
+                }
+            )
+        }
+        return res;
+    };
     option = null;
 
     option = {
@@ -216,6 +228,43 @@
                 }
             },
             {
+                name: 'station2',
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: [], //converData(data.station),
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
+                    }
+                },
+                symbolSize: 6,
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'red',
+                        shadowBlur: 1,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel:1
+            },
+            {
                 name: 'station-lines',
                 type: 'lines',
                 large: true,
@@ -240,7 +289,7 @@
     };
 
     myChart.showLoading();
-    $.getJSON('Json/TrainSHHData.json', function (data) {
+    $.getJSON('Json/DeleteTrainWeightData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
@@ -258,6 +307,10 @@
                 {
                     name: 'station',
                     data: converData(data.station)
+                },
+                {
+                    name:'station2',
+                    data:getCoord(data.station,data.node)
                 },
                 {
                     name: 'station-lines',
