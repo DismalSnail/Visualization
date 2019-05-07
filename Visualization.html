@@ -219,14 +219,19 @@
                 name: 'station-lines',
                 type: 'lines',
                 large: true,
+                zlevel:2,
                 largeThreshold: 2000,
                 coordinateSystem: 'bmap',
                 data: [],//routes,
                 lineStyle: {
                     normal: {
+                        color:new echarts.graphic.LinearGradient(0,0,0,1,[{
+                            offset: 0, color:'#5883CC'},
+                            {offset:1, color:'#F58158'}],false
+                        ),
                         opacity: 0.5,
-                        width: 0.8,
-                        curveness: 0.3
+                        width: 1.5,
+                        curveness: 0.1
                     }
                 }
                 //blendMode: 'lighter',
@@ -265,11 +270,10 @@
                     },
                     effect: {
                         show: true,
-                        period: 4,
-                        trailLength: 0.2,
-                        color: "aaa",
-                        symbolSize: 2,
-                        loop: true
+                        constantSpeed: 30,
+                        symbol:'pin',
+                        symbolSize: 3,
+                        trailLength: 0
                     }
                 }
             ]
