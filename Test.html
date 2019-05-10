@@ -36,6 +36,18 @@
         }
         return res;
     };
+    var getCoord=function(staCoord,staNum){
+        var res=[];
+        for (let i = 0;i < staNum.length;i++){
+            res.push(
+                {
+                    name:"" + staNum[i],
+                    value:[staCoord[staNum[i]][1],staCoord[staNum[i]][2]]
+                }
+            )
+        }
+        return res;
+    };
     option = null;
 
     option = {
@@ -49,6 +61,16 @@
         },
         tooltip: {
             trigger: 'item',
+        },
+        legend:{
+            orient:'vertical',
+            top:'bottom',
+            left: 'left',
+            data:['station','station2'],
+            textStyle: {
+                color:'#fff'
+            },
+            selectedMode:'single',
         },
         bmap: {
             center: [120.20, 33.38],
@@ -216,17 +238,59 @@
                 }
             },
             {
+                name: 'station2',
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: [], //converData(data.station),
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
+                    }
+                },
+                symbolSize: 6,
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'red',
+                        shadowBlur: 1,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel:1
+            },
+            {
                 name: 'station-lines',
                 type: 'lines',
                 large: true,
+                zlevel:2,
                 largeThreshold: 2000,
                 coordinateSystem: 'bmap',
                 data: [],//routes,
                 lineStyle: {
                     normal: {
+                        color:new echarts.graphic.LinearGradient(0,0,0,1,[{
+                            offset: 0, color:'#5883CC'},
+                            {offset:1, color:'#F58158'}],false
+                        ),
                         opacity: 0.5,
-                        width: 0.8,
-                        curveness: 0.3
+                        width: 1.5,
+                        curveness: 0.1
                     }
                 }
                 //blendMode: 'lighter',
@@ -235,7 +299,7 @@
     };
 
     myChart.showLoading();
-    $.getJSON('Json/TrainSHHData.json', function (data) {
+    $.getJSON('Json/DeleteTrainWeightData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
@@ -255,6 +319,10 @@
                     data: converData(data.station)
                 },
                 {
+                    name:'station2',
+                    data:getCoord(data.station,data.node)
+                },
+                {
                     name: 'station-lines',
                     data: routes,
                     tooltip: {
@@ -265,11 +333,10 @@
                     },
                     effect: {
                         show: true,
-                        period: 4,
-                        trailLength: 0.2,
-                        color: "aaa",
-                        symbolSize: 2,
-                        loop: true
+                        constantSpeed: 30,
+                        symbol:'pin',
+                        symbolSize: 3,
+                        trailLength: 0
                     }
                 }
             ]
