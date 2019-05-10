@@ -49,7 +49,9 @@
         return res;
     };
     option = null;
-    var color = ['#E9967A', '#FF0000', '#FF1493', '#DB7093', '#FFA500', '#FF4500', '#008000', '#00FF00', '#0000FF', '#00CED1', '#191970', '#2F4F4F'];
+    var color = ['#FF0000', '#00FF00', '#FF1493', '#32CD32',
+        '#DC143C', '#00FF7F', '#8B0000', '#ADFF2F',
+        '#B22222', '#00FFFF', '#FF00FF', '#00CED1'];
     var series = [];
     var series_name = ['cluster_degree', 'cluster_centrality', 'degree', 'centrality', 'SHH_cluster_degree', 'SHH_cluster_centrality', 'SHH_degree', 'SHH_centrality',
         'weight_cluster', 'weight', 'SHH_cluster_salience', 'SHH_salience'];
@@ -58,14 +60,7 @@
         type: 'scatter',
         coordinateSystem: 'bmap',
         data: [], //converData(data.station),
-        tooltip: {
-            show: true,
-            trigger: 'item',
-            formatter: function (params) {
-                return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
-            }
-        },
-        symbolSize: 3,
+        symbolSize: 4,
         hoverAnimation: true,
         label: {
             normal: {
@@ -91,13 +86,6 @@
                 type: 'effectScatter',
                 coordinateSystem: 'bmap',
                 data: [], //converData(data.station),
-                tooltip: {
-                    show: true,
-                    trigger: 'item',
-                    formatter: function (params) {
-                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
-                    }
-                },
                 symbolSize: 6,
                 showEffectOn: 'render',
                 rippleEffect: {
@@ -117,7 +105,7 @@
                 itemStyle: {
                     normal: {
                         color: color[i],
-                        shadowBlur: 1,
+                        shadowBlur: 0.5,
                         shadowColor: '#333'
                     }
                 },
@@ -167,6 +155,14 @@
         },
         tooltip: {
             trigger: 'item',
+            formatter:function (params, ticket, callback) {
+                console.log(params);
+                if(params.seriesType=="effectScatter"){
+                    return "站点号："+params.data.name;
+                }else {
+                    return ""+params.data.fromName + "->" +params.data.toName;
+                }
+            }
         },
         legend:{
             orient:'vertical',
@@ -321,11 +317,14 @@
             var res=[];
             for (let i = 0; i < routes.length; i++) {
                 if (node.indexOf(routes[i][0])!=-1 && node.indexOf(routes[i][1])!=-1){
-                    res.push([
+                    res.push({
+                        fromName:routes[i][0],
+                        toName:routes[i][1],
+                        coords:[
                             getStationCoord(routes[i][0]),
                             getStationCoord(routes[i][1])
                         ]
-                    )
+                    })
                 }
             }
             return res;
@@ -340,26 +339,57 @@
                     data: getCoord(data.station, data.cluster_degree)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.cluster_degree)
-
+                    data: getRoutes(data.weight_routes,data.cluster_degree),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        }
+                    },
+                    effect:{}
                 },
                 {
                     data: getCoord(data.station, data.cluster_centrality)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.cluster_centrality)
+                    data: getRoutes(data.weight_routes,data.cluster_centrality),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        },
+                        effect:{}
+                    }
                 },
                 {
                     data: getCoord(data.station, data.degree)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.degree)
+                    data: getRoutes(data.weight_routes,data.degree),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        },
+                        effect:{}
+                    }
                 },
                 {
                     data: getCoord(data.station, data.centrality)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.centrality)
+                    data: getRoutes(data.weight_routes,data.centrality),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        },
+                        effect:{}
+                    }
                 },
                 {
                     data: getCoord(data.station, data.SHH_cluster_degree)
@@ -372,19 +402,12 @@
                 },
                 {
                     data: getRoutes(data.SHH_routes,data.SHH_cluster_centrality)
-/*                    tooltip: {
-                        formatter: function (param) {
-                            var route = data.routes[param.dataIndex];
-                            return route[0] + ' -> ' + route[1];
-                        }
-                    }*/
                 },
                 {
                     data: getCoord(data.station, data.SHH_degree)
                 },
                 {
-                    data: getRoutes(data.SHH_routes,data.SHH_degree)
-
+                    data: getRoutes(data.SHH_routes,data.SHH_degree),
                 },
                 {
                     data: getCoord(data.station, data.SHH_centrality)
@@ -397,14 +420,30 @@
                     data: getCoord(data.station, data.weight_cluster)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.weight_cluster)
+                    data: getRoutes(data.weight_routes,data.weight_cluster),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        },
+                        effect:{}
+                    }
 
                 },
                 {
                     data: getCoord(data.station, data.weight)
                 },
                 {
-                    data: getRoutes(data.weight_routes,data.weight)
+                    data: getRoutes(data.weight_routes,data.weight),
+                    lineStyle: {
+                        normal: {
+                            opacity: 0.5,
+                            width: 0.5,
+                            curveness: 0.1
+                        },
+                        effect:{}
+                    }
 
                 },
                 {
@@ -419,7 +458,6 @@
                 },
                 {
                     data: getRoutes(data.SHH_routes,data.SHH_salience)
-
                 }
             ]
         });
