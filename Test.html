@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="ch">
 
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
     <script type="text/javascript" src="js/bmap.min.js"></script>
 </head>
 <body>
-<div id="main" style="width: 1920px;height:800px;"></div>
+<div id="main" style="width: 1350px;height:615px;"></div>
 
 
 <script type="text/javascript">
@@ -36,19 +36,125 @@
         }
         return res;
     };
-    var getCoord=function(staCoord,staNum){
-        var res=[];
-        for (let i = 0;i < staNum.length;i++){
+    var getCoord = function (staCoord, staNum) {
+        var res = [];
+        for (let i = 0; i < staNum.length; i++) {
             res.push(
                 {
-                    name:"" + staNum[i],
-                    value:[staCoord[staNum[i]][1],staCoord[staNum[i]][2]]
+                    name: "" + staNum[i],
+                    value: [staCoord[staNum[i]][1], staCoord[staNum[i]][2]]
                 }
             )
         }
         return res;
     };
     option = null;
+    var color = ['#E9967A', '#FF0000', '#FF1493', '#DB7093', '#FFA500', '#FF4500', '#008000', '#00FF00', '#0000FF', '#00CED1', '#191970', '#2F4F4F'];
+    var series = [];
+    var series_name = ['cluster_degree', 'cluster_centrality', 'degree', 'centrality', 'SHH_cluster_degree', 'SHH_cluster_centrality', 'SHH_degree', 'SHH_centrality',
+        'weight_cluster', 'weight', 'SHH_cluster_salience', 'SHH_salience'];
+    series.push({
+        name: 'all_station',
+        type: 'scatter',
+        coordinateSystem: 'bmap',
+        data: [], //converData(data.station),
+        tooltip: {
+            show: true,
+            trigger: 'item',
+            formatter: function (params) {
+                return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
+            }
+        },
+        symbolSize: 3,
+        hoverAnimation: true,
+        label: {
+            normal: {
+                formatter: '{b}',
+                position: 'right',
+                show: false
+            },
+            emphasis: {
+                show: true
+            }
+        },
+        itemStyle: {
+            normal: {
+                color: 'yellow',
+            }
+        }
+    });
+
+    series_name.forEach(function (item, i) {
+        series.push(
+            {
+                name: item,
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: [], //converData(data.station),
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
+                    }
+                },
+                symbolSize: 6,
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: color[i],
+                        shadowBlur: 1,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel: 1
+            },
+            {
+                name: item,
+                type: 'lines',
+                large: true,
+                zlevel: 1,
+                largeThreshold: 2000,
+                coordinateSystem: 'bmap',
+                data: [],//routes,
+                lineStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0, color: color[i]
+                            },
+                                {offset: 1, color: color[(i+1)%11]}], false
+                        ),
+                        opacity: 0.5,
+                        width: 1.5,
+                        curveness: 0.1
+                    }
+                },
+                effect: {
+                    show: true,
+                    constantSpeed: 30,
+                    symbol: 'pin',
+                    symbolSize: 3,
+                    trailLength: 0
+                }
+                //blendMode: 'lighter',
+            }
+        );
+    });
+
 
     option = {
         //backgroundColor: '#003',
@@ -65,12 +171,12 @@
         legend:{
             orient:'vertical',
             top:'bottom',
-            left: 'left',
-            data:['station','station2'],
+            left:'right',
+            data:series_name,
             textStyle: {
                 color:'#fff'
             },
-            selectedMode:'single',
+            selectedMode: 'single'
         },
         bmap: {
             center: [120.20, 33.38],
@@ -200,144 +306,120 @@
                 ]
             }
         },
-        series: [
-            {
-                name: 'station',
-                type: 'effectScatter',
-                coordinateSystem: 'bmap',
-                data: [], //converData(data.station),
-                tooltip: {
-                    show: true,
-                    trigger: 'item',
-                    formatter: function (params) {
-                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
-                    }
-                },
-                symbolSize: 3,
-                showEffectOn: 'render',
-                rippleEffect: {
-                    brushType: 'stroke'
-                },
-                hoverAnimation: true,
-                label: {
-                    normal: {
-                        formatter: '{b}',
-                        position: 'right',
-                        show: false
-                    },
-                    emphasis: {
-                        show: true
-                    }
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'yellow',
-                        shadowBlur: 1,
-                        shadowColor: '#333'
-                    }
-                }
-            },
-            {
-                name: 'station2',
-                type: 'effectScatter',
-                coordinateSystem: 'bmap',
-                data: [], //converData(data.station),
-                tooltip: {
-                    show: true,
-                    trigger: 'item',
-                    formatter: function (params) {
-                        return 'stationID:' + params.name + '<br/>' + 'longitude:' + params.value[0] + '<br/>' + 'latitude:' + params.value[1];
-                    }
-                },
-                symbolSize: 6,
-                showEffectOn: 'render',
-                rippleEffect: {
-                    brushType: 'stroke'
-                },
-                hoverAnimation: true,
-                label: {
-                    normal: {
-                        formatter: '{b}',
-                        position: 'right',
-                        show: false
-                    },
-                    emphasis: {
-                        show: true
-                    }
-                },
-                itemStyle: {
-                    normal: {
-                        color: 'red',
-                        shadowBlur: 1,
-                        shadowColor: '#333'
-                    }
-                },
-                zlevel:1
-            },
-            {
-                name: 'station-lines',
-                type: 'lines',
-                large: true,
-                zlevel:2,
-                largeThreshold: 2000,
-                coordinateSystem: 'bmap',
-                data: [],//routes,
-                lineStyle: {
-                    normal: {
-                        color:new echarts.graphic.LinearGradient(0,0,0,1,[{
-                            offset: 0, color:'#5883CC'},
-                            {offset:1, color:'#F58158'}],false
-                        ),
-                        opacity: 0.5,
-                        width: 1.5,
-                        curveness: 0.1
-                    }
-                }
-                //blendMode: 'lighter',
-            }
-        ]
+        series: series
     };
 
     myChart.showLoading();
-    $.getJSON('Json/DeleteTrainWeightData.json', function (data) {
+    $.getJSON('Json/AllData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
         }
 
-        var routes = data.routes.map(function (airline) {
-            return [
-                getStationCoord(airline[0]),
-                getStationCoord(airline[1])
-            ];
-        });
+        function getRoutes(routes,node)
+        {
+            var res=[];
+            for (let i = 0; i < routes.length; i++) {
+                if (node.indexOf(routes[i][0])!=-1 && node.indexOf(routes[i][1])!=-1){
+                    res.push([
+                            getStationCoord(routes[i][0]),
+                            getStationCoord(routes[i][1])
+                        ]
+                    )
+                }
+            }
+            return res;
+        }
         myChart.hideLoading();
         myChart.setOption({
             series: [
                 {
-                    name: 'station',
                     data: converData(data.station)
                 },
                 {
-                    name:'station2',
-                    data:getCoord(data.station,data.node)
+                    data: getCoord(data.station, data.cluster_degree)
                 },
                 {
-                    name: 'station-lines',
-                    data: routes,
-                    tooltip: {
+                    data: getRoutes(data.weight_routes,data.cluster_degree)
+
+                },
+                {
+                    data: getCoord(data.station, data.cluster_centrality)
+                },
+                {
+                    data: getRoutes(data.weight_routes,data.cluster_centrality)
+                },
+                {
+                    data: getCoord(data.station, data.degree)
+                },
+                {
+                    data: getRoutes(data.weight_routes,data.degree)
+                },
+                {
+                    data: getCoord(data.station, data.centrality)
+                },
+                {
+                    data: getRoutes(data.weight_routes,data.centrality)
+                },
+                {
+                    data: getCoord(data.station, data.SHH_cluster_degree)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_cluster_degree)
+                },
+                {
+                    data: getCoord(data.station, data.SHH_cluster_centrality)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_cluster_centrality)
+/*                    tooltip: {
                         formatter: function (param) {
                             var route = data.routes[param.dataIndex];
-                            return route[0] + ' -> ' + route[1] ;
+                            return route[0] + ' -> ' + route[1];
                         }
-                    },
-                    effect: {
-                        show: true,
-                        constantSpeed: 30,
-                        symbol:'pin',
-                        symbolSize: 3,
-                        trailLength: 0
-                    }
+                    }*/
+                },
+                {
+                    data: getCoord(data.station, data.SHH_degree)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_degree)
+
+                },
+                {
+                    data: getCoord(data.station, data.SHH_centrality)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_centrality)
+
+                },
+                {
+                    data: getCoord(data.station, data.weight_cluster)
+                },
+                {
+                    data: getRoutes(data.weight_routes,data.weight_cluster)
+
+                },
+                {
+                    data: getCoord(data.station, data.weight)
+                },
+                {
+                    data: getRoutes(data.weight_routes,data.weight)
+
+                },
+                {
+                    data: getCoord(data.station, data.SHH_cluster_salience)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_cluster_salience)
+
+                },
+                {
+                    data: getCoord(data.station, data.SHH_salience)
+                },
+                {
+                    data: getRoutes(data.SHH_routes,data.SHH_salience)
+
                 }
             ]
         });
