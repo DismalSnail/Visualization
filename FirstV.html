@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
     <script src="http://api.map.baidu.com/api?v=3.0&ak=DekeYzYeAYX1nA8fYzw1lt6uqTVXe8Bt&s=1"></script>
-
     <script type="text/javascript" src="js/jquery-3.3.1.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/echarts-gl.js"></script>
@@ -38,111 +36,7 @@
         }
         return res;
     };
-    var getCoord = function (staCoord, staNum) {
-        var res = [];
-        for (let i = 0; i < staNum.length; i++) {
-            res.push(
-                {
-                    name: "" + staNum[i],
-                    value: [staCoord[staNum[i]][1], staCoord[staNum[i]][2]]
-                }
-            )
-        }
-        return res;
-    };
     option = null;
-    var color = ['#FF0000', '#00FF00', '#FF00FF', '#00FFFF'];
-    var series = [];
-    var series_name = ['cluster_centrality', 'centrality', 'cluster_salience', 'salience'];
-    series.push({
-        name: 'all_station',
-        type: 'scatter',
-        coordinateSystem: 'bmap',
-        data: [], //converData(data.station),
-        symbolSize: 4,
-        hoverAnimation: true,
-        label: {
-            normal: {
-                formatter: '{b}',
-                position: 'right',
-                show: false
-            },
-            emphasis: {
-                show: true
-            }
-        },
-        itemStyle: {
-            normal: {
-                color: 'yellow',
-            }
-        }
-    });
-
-    series_name.forEach(function (item, i) {
-        series.push(
-            {
-                name: item,
-                type: 'effectScatter',
-                coordinateSystem: 'bmap',
-                data: [], //converData(data.station),
-                symbolSize: 6,
-                showEffectOn: 'render',
-                rippleEffect: {
-                    brushType: 'stroke'
-                },
-                hoverAnimation: true,
-                label: {
-                    normal: {
-                        formatter: '{b}',
-                        position: 'right',
-                        show: false
-                    },
-                    emphasis: {
-                        show: true
-                    }
-                },
-                itemStyle: {
-                    normal: {
-                        color: color[i],
-                        shadowBlur: 0.5,
-                        shadowColor: '#333'
-                    }
-                },
-                zlevel: 1
-            },
-            {
-                name: item,
-                type: 'lines',
-                large: true,
-                zlevel: 1,
-                largeThreshold: 2000,
-                coordinateSystem: 'bmap',
-                data: [],//routes,
-                lineStyle: {
-                    normal: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0, color: color[i]
-                            },
-                                {offset: 1, color: color[(i+1)%4]}], false
-                        ),
-                        opacity: 0.5,
-                        width: 1.5,
-                        curveness: 0.1
-                    }
-                },
-                effect: {
-                    show: true,
-                    constantSpeed: 30,
-                    symbol: 'pin',
-                    symbolSize: 3,
-                    trailLength: 0
-                }
-                //blendMode: 'lighter',
-            }
-        );
-    });
-
-
     option = {
         //backgroundColor: '#003',
         title: {
@@ -156,22 +50,12 @@
             trigger: 'item',
             formatter:function (params) {
                 console.log(params);
-                if(params.seriesType==="effectScatter"){
+                if(params.seriesType==="scatter"){
                     return "站点号："+params.data.name;
-                }else if(params.seriesType==="lines"){
+                }else {
                     return ""+params.data.fromName + "->" +params.data.toName;
                 }
             }
-        },
-        legend:{
-            orient:'vertical',
-            top:'bottom',
-            left:'right',
-            data:series_name,
-            textStyle: {
-                color:'#fff'
-            },
-            selectedMode: 'single'
         },
         bmap: {
             center: [120.20, 33.38],
@@ -301,21 +185,66 @@
                 ]
             }
         },
-        series: series
+        series: [
+            {
+                name: 'all_station',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: [], //converData(data.station),
+                symbolSize: 4,
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'yellow',
+                    }
+                }
+            },
+            {
+                name: 'show-lines',
+                type: 'lines',
+                large: true,
+                zlevel: 1,
+                largeThreshold: 2000,
+                coordinateSystem: 'bmap',
+                data: [],//routes,
+                lineStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0, color: '#FF0000'
+                            },
+                                {offset: 1, color: '#00FF00'}], false
+                        ),
+                        opacity: 0.5,
+                        width: 0.5,
+                        curveness: 0.1
+                    }
+                },
+                blendMode: 'lighter',
+            }
+        ]
     };
 
     myChart.showLoading();
-    $.getJSON('Json/AllData.json', function (data) {
+    $.getJSON('Json/TrainWeightData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
         }
 
-        function getRoutes(routes,node)
+        function getRoutes(routes)
         {
             var res=[];
             for (let i = 0; i < routes.length; i++) {
-                if (node.indexOf(routes[i][0])!==-1 && node.indexOf(routes[i][1])!==-1){
                     res.push({
                         fromName:routes[i][0],
                         toName:routes[i][1],
@@ -324,7 +253,6 @@
                             getStationCoord(routes[i][1])
                         ]
                     })
-                }
             }
             return res;
         }
@@ -335,29 +263,7 @@
                     data: converData(data.station)
                 },
                 {
-                    data: getCoord(data.station, data.cluster_centrality)
-                },
-                {
-                    data: getRoutes(data.SHH_routes,data.cluster_centrality)
-                },
-                {
-                    data: getCoord(data.station, data.centrality)
-                },
-                {
-                    data: getRoutes(data.SHH_routes,data.centrality),
-                },
-                {
-                    data: getCoord(data.station, data.cluster_salience)
-                },
-                {
-                    data: getRoutes(data.SHH_routes,data.cluster_salience)
-
-                },
-                {
-                    data: getCoord(data.station, data.salience)
-                },
-                {
-                    data: getRoutes(data.SHH_routes,data.salience)
+                    data: getRoutes(data.routes)
                 }
             ]
         });
