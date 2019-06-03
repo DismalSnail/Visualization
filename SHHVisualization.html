@@ -16,7 +16,7 @@
     <script type="text/javascript" src="js/bmap.min.js"></script>
 </head>
 <body>
-<div id="main" style="width: 1350px;height:615px;"></div>
+<div id="main" style="width: 1520px;height:715px;"></div>
 
 
 <script type="text/javascript">
@@ -225,8 +225,8 @@
                                 {offset: 1, color: '#00FF00'}], false
                         ),
                         opacity: 0.5,
-                        width: 0.5,
-                        curveness: 0.1
+                        width: 1.5,
+                        curveness: 0.2
                     }
                 },
                 blendMode: 'lighter',
@@ -235,7 +235,7 @@
     };
 
     myChart.showLoading();
-    $.getJSON('Json/TrainWeightData.json', function (data) {
+    $.getJSON('Json/TrainSHHData.json', function (data) {
 
         function getStationCoord(idx) {
             return [data.station[idx][1], data.station[idx][2]];
@@ -245,14 +245,14 @@
         {
             var res=[];
             for (let i = 0; i < routes.length; i++) {
-                    res.push({
-                        fromName:routes[i][0],
-                        toName:routes[i][1],
-                        coords:[
-                            getStationCoord(routes[i][0]),
-                            getStationCoord(routes[i][1])
-                        ]
-                    })
+                res.push({
+                    fromName:routes[i][0],
+                    toName:routes[i][1],
+                    coords:[
+                        getStationCoord(routes[i][0]),
+                        getStationCoord(routes[i][1])
+                    ]
+                })
             }
             return res;
         }
